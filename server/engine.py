@@ -11,12 +11,13 @@ import subprocess
 import tempfile
 import wave
 from datetime import datetime
+from typing import Optional
 
 from faster_whisper import WhisperModel
 from silero_vad import load_silero_vad, get_speech_timestamps, read_audio
 
 
-def preprocess_audio(input_path: str, output_path: str | None = None) -> str:
+def preprocess_audio(input_path: str, output_path: Optional[str] = None) -> str:
     """Convert audio to 16kHz mono WAV using ffmpeg."""
     if output_path is None:
         fd, output_path = tempfile.mkstemp(suffix=".wav")
@@ -93,7 +94,7 @@ def detect_pauses(
     return pauses, round(total_speech_sec, 3), round(total_silence_sec, 3)
 
 
-_whisper_model: WhisperModel | None = None
+_whisper_model: Optional[WhisperModel] = None
 
 def get_whisper_model(model_size: str = "base") -> WhisperModel:
     global _whisper_model
