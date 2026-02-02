@@ -22,6 +22,60 @@ echo -e "${BLUE}  Complete Setup & Run${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
+# Check prerequisites
+echo -e "${BLUE}Checking prerequisites...${NC}"
+echo ""
+
+MISSING_DEPS=0
+
+# Check Python
+if command -v python3 &>/dev/null; then
+    PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
+    PYTHON_MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
+    PYTHON_MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
+    
+    if [ "$PYTHON_MAJOR" -eq 3 ] && [ "$PYTHON_MINOR" -ge 9 ]; then
+        echo -e "${GREEN}✓ Python $PYTHON_VERSION${NC}"
+    else
+        echo -e "${RED}✗ Python 3.9+ required (found: $PYTHON_VERSION)${NC}"
+        echo -e "  Install with: ${YELLOW}brew install python@3.11${NC} or ${YELLOW}pyenv install 3.11${NC}"
+        MISSING_DEPS=1
+    fi
+else
+    echo -e "${RED}✗ Python 3.9+ not found${NC}"
+    echo -e "  Install with: ${YELLOW}brew install python@3.11${NC} or ${YELLOW}pyenv install 3.11${NC}"
+    MISSING_DEPS=1
+fi
+
+# Check Node.js
+if command -v node &>/dev/null; then
+    NODE_VERSION=$(node --version)
+    echo -e "${GREEN}✓ Node.js $NODE_VERSION${NC}"
+else
+    echo -e "${RED}✗ Node.js not found${NC}"
+    echo -e "  Install with: ${YELLOW}brew install node${NC}"
+    MISSING_DEPS=1
+fi
+
+# Check FFmpeg
+if command -v ffmpeg &>/dev/null; then
+    FFMPEG_VERSION=$(ffmpeg -version 2>&1 | head -n1 | awk '{print $3}')
+    echo -e "${GREEN}✓ FFmpeg $FFMPEG_VERSION${NC}"
+else
+    echo -e "${RED}✗ FFmpeg not found${NC}"
+    echo -e "  Install with: ${YELLOW}brew install ffmpeg${NC}"
+    MISSING_DEPS=1
+fi
+
+if [ $MISSING_DEPS -eq 1 ]; then
+    echo ""
+    echo -e "${RED}Please install missing prerequisites and try again.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}All prerequisites satisfied!${NC}"
+echo ""
+
 # Check if virtual environment exists
 if [ ! -d "$VENV_DIR" ]; then
     echo -e "${YELLOW}[1/4] Creating Python virtual environment...${NC}"
