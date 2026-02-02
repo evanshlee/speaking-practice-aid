@@ -313,6 +313,13 @@ body {
   color: white;
 }
 
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 .record-btn:hover {
   transform: scale(1.02);
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);

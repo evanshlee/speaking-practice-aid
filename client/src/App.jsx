@@ -224,7 +224,11 @@ function App() {
         <div className="audio-input-area">
           {mode === 'record' ? (
             <div className="record-section">
-              {!isRecording ? (
+              {isProcessing ? (
+                <button className="action-btn record-btn" disabled>
+                  ⏳ Processing...
+                </button>
+              ) : !isRecording ? (
                 <button className="action-btn record-btn" onClick={startRecording}>
                   🔴 Start Recording
                 </button>

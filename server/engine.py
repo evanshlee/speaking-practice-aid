@@ -347,35 +347,7 @@ def compute_word_count(text: str) -> int:
     return len(text.split())
 
 
-def count_fillers(text: str) -> tuple[int, str]:
-    """
-    Count filler words and return total count and a formatted detail string.
-    Targets: um, uh, hm, hmm, er, ah, like, you know, i mean
-    """
-    fillers = [
-        "um", "uh", "hmm", "hm", "er", "ah", 
-        "like", "you know", "i mean", "actually", "basically"
-    ]
-    
-    counts = {}
-    total = 0
-    text_lower = text.lower()
-    
-    for filler in fillers:
-        # Match whole words only
-        matches = len(re.findall(fr'\b{re.escape(filler)}\b', text_lower))
-        if matches > 0:
-            counts[filler] = matches
-            total += matches
-            
-    if total == 0:
-        return 0, ""
-        
-    # Sort by frequency
-    sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
-    details = ", ".join([f"{k}: {v}" for k, v in sorted_counts])
-    
-    return total, f"({details})"
+
 
 
 def generate_report(
@@ -394,15 +366,11 @@ def generate_report(
     speech_minutes = total_speech_sec / 60.0 if total_speech_sec > 0 else 1.0
     wpm = round(word_count / speech_minutes) if speech_minutes > 0 else 0
     
-    # Filler count
-    filler_count, filler_details = count_fillers(transcript_full)
-    
     summary_section = "\n".join([
         "=== A) SUMMARY ===",
         f"Date: {date}",
         f"Duration: {duration_sec:.1f}s (Speech: {total_speech_sec:.1f}s, Silence: {total_silence_sec:.1f}s)",
         f"Words: {word_count} (Approx. {wpm} WPM)",
-        f"Fillers: {filler_count} {filler_details}".strip(),
     ])
     
     # B) Timeline
