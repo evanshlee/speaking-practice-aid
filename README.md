@@ -36,7 +36,7 @@ A local-only web application for analyzing speaking practice recordings. It tran
 
 ### 1. Clone and navigate to the project
 ```bash
-git clone https://github.com/your-username/practice-speaking.git
+git clone https://github.com/evanshlee/speaking-practice.git
 cd practice-speaking
 ```
 
@@ -59,13 +59,33 @@ cd ..
 
 ## Running the Application
 
-### Quick Start (Recommended)
+### 🔧 First Time Setup & Run
+
+**Fresh clone? No dependencies installed yet?** This one command does it all:
+```bash
+./setup-and-run.sh
+```
+This will:
+- Create Python virtual environment (if needed)
+- Install all backend dependencies
+- Install all frontend dependencies  
+- Start both backend and frontend servers
+
+**Then open [http://localhost:5173](http://localhost:5173)** in your browser! 🚀
+
+---
+
+### ⚡ Quick Start (Already Set Up)
+
+**Dependencies already installed?** Just run:
 ```bash
 ./start.sh
 ```
-This starts both the backend and frontend servers simultaneously.
+This starts both servers instantly.
 
-### Manual Start
+---
+
+### 🛠️ Manual Start (Advanced)
 
 **Terminal 1 - Backend:**
 ```bash
