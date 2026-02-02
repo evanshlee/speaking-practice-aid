@@ -28,7 +28,7 @@ def health_check():
 async def transcribe(
     file: UploadFile = File(...),
     source: str = Form("upload"),
-    pause_threshold: float = Form(1.0),
+    pause_threshold: float = Form(0.6),
     model_size: str = Form("base"),
 ):
     """

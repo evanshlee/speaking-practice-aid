@@ -14,9 +14,10 @@ function App() {
   const [error, setError] = useState('')
   const [copiedId, setCopiedId] = useState(null)
   const [elapsedTime, setElapsedTime] = useState(0)
+  const [expandedReportId, setExpandedReportId] = useState(null)
   
   // Settings
-  const [pauseThreshold, setPauseThreshold] = useState(1.0)
+  const [pauseThreshold, setPauseThreshold] = useState(0.6)
   const [modelSize, setModelSize] = useState('small')
   
   // Refs
@@ -90,6 +91,7 @@ function App() {
     if (file) {
       setAudioBlob(file)
       setAudioUrl(URL.createObjectURL(file))
+      handleTranscribe(file) // Auto-transcribe immediately
     }
   }
 
@@ -126,14 +128,16 @@ function App() {
       }
       
       const data = await response.json()
+      const newReportId = Date.now()
       setReports(prev => [
         { 
-          id: Date.now(), 
+          id: newReportId, 
           content: data.report, 
           timestamp: new Date().toLocaleString() 
         }, 
         ...prev
       ])
+      setExpandedReportId(newReportId) // Auto-expand new report
     } catch (err) {
       setError(err.message || 'An error occurred during transcription.')
     } finally {
@@ -257,14 +261,7 @@ function App() {
           )}
         </div>
 
-        {/* Transcribe Button */}
-        <button
-          className="action-btn transcribe-btn"
-          onClick={handleTranscribe}
-          disabled={!audioBlob || isProcessing}
-        >
-          {isProcessing ? '⏳ Processing...' : '🚀 Transcribe'}
-        </button>
+
 
         {/* Error Display */}
         {error && <div className="error-message">{error}</div>}
@@ -272,35 +269,46 @@ function App() {
         {/* Report Display */}
         {reports.length > 0 && (
           <div className="report-section">
-            {reports.map((item, index) => (
-              <div key={item.id} className="report-item">
-                <details open={index === 0}>
-                  <summary className="report-summary">
+            {reports.map((item, index) => {
+              const isExpanded = expandedReportId === item.id || (expandedReportId === null && index === 0);
+              
+              return (
+                <div 
+                  key={item.id} 
+                  className={`report-item ${isExpanded ? 'expanded' : ''}`}
+                >
+                  <div 
+                    className="report-summary"
+                    onClick={() => setExpandedReportId(isExpanded ? null : item.id)}
+                  >
                     <span className="summary-title">📋 Report #{reports.length - index}</span>
                     <span className="summary-date">{item.timestamp}</span>
-                  </summary>
-                  <div className="report-content-wrapper">
-                    <div className="report-header">
-                      <span className="timestamp">ID: {item.id}</span>
-                      <div className="report-actions">
-                        <button className="copy-btn" onClick={() => handleCopy(item.content, item.id)}>
-                          {copiedId === item.id ? '✅ Copied!' : '📋 Copy'}
-                        </button>
-                        <button className="delete-btn" onClick={() => handleDelete(item.id)} title="Delete Report">
-                          🗑️
-                        </button>
-                      </div>
-                    </div>
-                    <textarea
-                      className="report-textarea"
-                      value={item.content}
-                      readOnly
-                      rows={15}
-                    />
                   </div>
-                </details>
-              </div>
-            ))}
+                  
+                  {isExpanded && (
+                    <div className="report-content-wrapper">
+                      <div className="report-header">
+                        <span className="timestamp">ID: {item.id}</span>
+                        <div className="report-actions">
+                          <button className="copy-btn" onClick={(e) => { e.stopPropagation(); handleCopy(item.content, item.id); }}>
+                            {copiedId === item.id ? '✅ Copied!' : '📋 Copy'}
+                          </button>
+                          <button className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }} title="Delete Report">
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                      <textarea
+                        className="report-textarea"
+                        value={item.content}
+                        readOnly
+                        rows={15}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </main>

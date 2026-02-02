@@ -63,7 +63,7 @@ body {
 
 /* App Container */
 .app-container {
-  max-width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   padding: var(--spacing-md);
   min-height: 100vh;
@@ -106,8 +106,9 @@ body {
     "transcribe transcribe"
     "report report";
   grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto auto 1fr; /* Report takes all remaining space */
   gap: var(--spacing-md);
-  align-content: start;
+  align-content: stretch; /* Stretch to fill container */
 }
 
 /* Mode Selector */
@@ -367,9 +368,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  /* Use a consistent max-height to force scrolling when content piles up */
-  max-height: 500px; 
+  /* Fill available space */
+  flex: 1;
+  min-height: 0; /* Important for flex scrolling */
   overflow-y: auto;
+  padding: var(--spacing-md);
   padding-right: var(--spacing-sm); /* Avoid scrollbar covering content */
   border: 1px solid var(--border-color); /* Ensure border is visible */
   background: var(--bg-card); /* Ensure background is set */
@@ -392,6 +395,8 @@ body {
 }
 
 .report-item {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -400,8 +405,9 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Style for expanded state using :has pseudo-class */
-.report-item:has(details[open]) {
+/* Expanded state styling */
+.report-item.expanded {
+  flex: 1;
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-md);
 }
@@ -434,27 +440,18 @@ body {
 }
 
 /* Summary / Details Styling */
-details {
-  width: 100%;
-}
-
-summary.report-summary {
+.report-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
-  list-style: none; /* Hide default triangle */
   background: rgba(255, 255, 255, 0.02);
   transition: background 0.2s;
 }
 
-summary.report-summary:hover {
+.report-summary:hover {
   background: rgba(255, 255, 255, 0.05);
-}
-
-summary.report-summary::-webkit-details-marker {
-  display: none;
 }
 
 .summary-title {
@@ -468,9 +465,13 @@ summary.report-summary::-webkit-details-marker {
   color: var(--text-muted);
 }
 
-/* Inner content wrapper for details */
+/* Inner content wrapper */
 .report-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   border-top: 1px solid var(--border-color);
+  min-height: 0; /* Important for nested flex */
 }
 
 .report-actions {
@@ -523,6 +524,9 @@ summary.report-summary::-webkit-details-marker {
   background: var(--bg-primary);
   color: var(--text-primary);
   resize: none; /* Disable manual resize */
+  min-height: 0; /* Allow shrinking in flex container */
+  flex: 1; /* Fill remaining vertical space */
+  width: 100%; /* Fill horizontal space */
 }
 
 .report-textarea:focus {
