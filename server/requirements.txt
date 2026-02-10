@@ -3,7 +3,7 @@ uvicorn
 python-multipart
 faster-whisper
 torch
-torchaudio
+torchaudio<2.9
 soundfile
 numpy
 ffmpeg-python

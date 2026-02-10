@@ -17,21 +17,62 @@ A local-only web application for analyzing speaking practice recordings. It tran
 ## Prerequisites
 
 1. **Python 3.9+** (3.9, 3.10, 3.11, or 3.12)
+
+   <details>
+   <summary>macOS / Linux</summary>
+
    ```bash
    # If using pyenv
    pyenv install 3.11  # or 3.9, 3.10, 3.12
    pyenv shell 3.11
    ```
+   </details>
+
+   <details>
+   <summary>Windows</summary>
+
+   Download from [python.org](https://www.python.org/downloads/) or:
+   ```cmd
+   winget install Python.Python.3.11
+   ```
+   </details>
 
 2. **Node.js** (18+ recommended)
+
+   <details>
+   <summary>macOS / Linux</summary>
+
    ```bash
    brew install node  # or use nvm
    ```
+   </details>
+
+   <details>
+   <summary>Windows</summary>
+
+   Download from [nodejs.org](https://nodejs.org/) or:
+   ```cmd
+   winget install OpenJS.NodeJS.LTS
+   ```
+   </details>
 
 3. **FFmpeg**
+
+   <details>
+   <summary>macOS / Linux</summary>
+
    ```bash
    brew install ffmpeg
    ```
+   </details>
+
+   <details>
+   <summary>Windows</summary>
+
+   ```cmd
+   winget install Gyan.FFmpeg
+   ```
+   </details>
 
 ## Quick Start
 
@@ -40,16 +81,25 @@ A local-only web application for analyzing speaking practice recordings. It tran
 ### 🔧 First Time Setup & Run
 
 **Fresh clone?** Run this one command after installing prerequisites:
+
+**macOS / Linux:**
 ```bash
 git clone https://github.com/evanshlee/speaking-practice.git
-cd practice-speaking
+cd speaking-practice
 ./setup-and-run.sh
+```
+
+**Windows (CMD):**
+```cmd
+git clone https://github.com/evanshlee/speaking-practice.git
+cd speaking-practice
+setup-and-run.bat
 ```
 
 This will:
 - Create Python virtual environment
 - Install all backend dependencies
-- Install all frontend dependencies  
+- Install all frontend dependencies
 - Start both backend and frontend servers
 
 **Then open [http://localhost:5173](http://localhost:5173)** in your browser! 🚀
@@ -59,9 +109,17 @@ This will:
 ### ⚡ Next Time (Already Set Up)
 
 **Dependencies already installed?** Just run:
+
+**macOS / Linux:**
 ```bash
 ./start.sh
 ```
+
+**Windows (CMD):**
+```cmd
+start.bat
+```
+
 This starts both servers instantly.
 
 ---
@@ -77,13 +135,19 @@ cd practice-speaking
 ```
 
 ### 2. Set up the backend
-```bash
-# Create virtual environment with Python 3.9+
-python3 -m venv venv
 
-# Activate and install dependencies
+**macOS / Linux:**
+```bash
+python3 -m venv venv
 source venv/bin/activate
 pip install -r server/requirements.txt
+```
+
+**Windows (CMD):**
+```cmd
+python -m venv venv
+call venv\Scripts\activate.bat
+pip install -r server\requirements.txt
 ```
 
 ### 3. Set up the frontend
@@ -95,13 +159,20 @@ cd ..
 
 ## Running the Application
 
-After manual installation, you can use `./start.sh` for quick start, or run servers manually:
+After manual installation, you can use `./start.sh` (macOS/Linux) or `start.bat` (Windows) for quick start, or run servers manually:
 
 ### 🛠️ Manual Start (Advanced)
 
-**Terminal 1 - Backend:**
+**Terminal 1 - Backend (macOS / Linux):**
 ```bash
 source venv/bin/activate
+cd server
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Terminal 1 - Backend (Windows CMD):**
+```cmd
+call venv\Scripts\activate.bat
 cd server
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -151,8 +222,8 @@ Words: 142 (Approx. 154 WPM)
 
 | Problem | Solution |
 |---------|----------|
-| `ffmpeg not found` | Install with `brew install ffmpeg` |
-| Python version errors | Use Python 3.11 or 3.12 with pyenv |
+| `ffmpeg not found` | Install with `brew install ffmpeg` (macOS) or `winget install Gyan.FFmpeg` (Windows) |
+| Python version errors | Use Python 3.11 or 3.12 with pyenv (macOS/Linux) or python.org installer (Windows) |
 | CORS errors | Ensure backend is running on port 8000 |
 | Slow first run | Whisper model downloads on first use (~150MB for base) |
 | Port already in use | Kill existing processes or change port |
